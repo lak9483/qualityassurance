@@ -5,7 +5,7 @@ variables:
   webAppName: 'Ad-AppService'
   resourcegroupname: 'Azuredevops'
   storageaccountname: 'storage5132022'
-  containername: 'container5132022 '
+  containername: 'container5132022'
 stages:
 - stage: Build
   jobs:
