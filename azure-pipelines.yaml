@@ -29,10 +29,10 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        backendServiceArm: $(azureServiceConnectionId)
-        backendAzureRmResourceGroupName: ${resourcegroupname}
-        backendAzureRmStorageAccountName: ${storageaccountname}
-        backendAzureRmContainerName: ${containername}
+        backendServiceArm: '$(azureServiceConnectionId)'
+        backendAzureRmResourceGroupName: '$(resourcegroupname)'
+        backendAzureRmStorageAccountName: '$(storageaccountname)'
+        backendAzureRmContainerName: '$(containername)'
         backendAzureRmKey: 'terraform.state'
       
     - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
@@ -40,14 +40,14 @@ stages:
       inputs:
         command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: $(azureServiceConnectionId)
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
     - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
       displayName: 'Terraform apply'
       inputs:
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: $(azureServiceConnectionId)  
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
