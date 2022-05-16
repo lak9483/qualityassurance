@@ -1,6 +1,11 @@
 name: Azure Pipelines
 variables:
   python.version: '3.7.6'
+  azureServiceConnectionId: 'myserviceconnection'
+  webAppName: 'Ad-AppService'
+  resourcegroupname: 'Azuredevops'
+  storageaccountname: 'storage4132022'
+  containername: 'container5132022 '
 stages:
 - stage: Build
   jobs:
@@ -14,10 +19,39 @@ stages:
     #     knownHostsEntry: 'KNOWN_HOSTS_STRING'
     #     sshPublicKey: 'PUBLIC_KEY'
     #     sshKeySecureFile: 'id_rsa'
+    - task: TerraformInstaller@0
+      displayName: "Install Terraform"
+      inputs:
+        terraformVersion: '1.1.9'
+    - task: TerraformTaskV1@0 
+      displayName: 'Terraform init'
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        backendServiceArm: $(azureServiceConnectionId)
+        backendAzureRmResourceGroupName: ${resourcegroupname}
+        backendAzureRmStorageAccountName: ${storageaccountname}
+        backendAzureRmContainerName: ${containername}
+        backendAzureRmKey: 'terraform.state'
+      
+    - task: TerraformTaskV1@0
+      displayName: 'Terraform sol plan'
+      inputs:
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: $(azureServiceConnectionId)
+
+    - task: TerraformTaskV1@0
+      displayName: 'Terraform apply'
+      inputs:
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: $(azureServiceConnectionId)  
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
-        rootFolderOrFile: 'path/to/fakerestapi'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
@@ -37,8 +71,8 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
-              azureSubscription: ''
-              appName: ''
+              azureSubscription: $(azureServiceConnectionId)
+              appName: $(webAppName)
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
   # - deployment: VMDeploy
