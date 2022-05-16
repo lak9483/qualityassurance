@@ -4,7 +4,7 @@ variables:
   azureServiceConnectionId: 'myserviceconnection'
   webAppName: 'Ad-AppService'
   resourcegroupname: 'Azuredevops'
-  storageaccountname: 'storage4132022'
+  storageaccountname: 'storage5132022'
   containername: 'container5132022 '
 stages:
 - stage: Build
