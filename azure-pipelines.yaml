@@ -62,7 +62,7 @@ stages:
   jobs:
   - deployment: FakeRestAPI
     pool:
-      vmImage: 'Ubuntu-18.04'
+      name: myAgentPool
     environment: 'TEST'
     strategy:
       runOnce:
