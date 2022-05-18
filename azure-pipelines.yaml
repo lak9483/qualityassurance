@@ -88,7 +88,7 @@ stages:
       displayName: EnduranceTest
       inputs:
         targetType: 'inline'
-        script: 'jmeter -n -t automatedtesting/jmeter/Endurance.jmx -l automatedtesting/jmeter/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport'
+        script: jmeter -n -t automatedtesting/jmeter/Endurance.jmx -l automatedtesting/jmeter/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport
     - task: publishhtmlreport@1
       displayName: 'Publish Endurance Report'
       inputs:
@@ -99,7 +99,7 @@ stages:
       displayName: StressTest
       inputs:
         targetType: 'inline'
-        script: 'jmeter -n -t automatedtesting/jmeter/Stress.jmx  -l automatedtesting/jmeter/stressresults.jtl -e -o automatedtesting/jmeter/stressreport'
+        script: jmeter -n -t automatedtesting/jmeter/Stress.jmx  -l automatedtesting/jmeter/stressresults.jtl -e -o automatedtesting/jmeter/stressreport
     - task: publishhtmlreport@1
       displayName: 'Publish Stress Report'
       inputs:
