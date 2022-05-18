@@ -150,7 +150,6 @@ stages:
                 wget https://chromedriver.storage.googleapis.com/100.0.4896.20/chromedriver_linux64.zip
                 unzip chromedriver_linux64.zip
                 sudo mv chromedriver /usr/bin/chromedriver
-                sudo chown root:root /usr/bin/chromedriver
                 python3 automatedtesting/selenium/login.py 
 
   # - deployment: VMDeploy
