@@ -123,11 +123,20 @@ stages:
       inputs:
         script: 'newman run DataValidation.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export automatedtesting/postman/DataValidationReport.xml'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+    - task: PublishPipelineArtifact@1
+
+      displayName: Publish Newman logs
+
+      inputs:
+
+        targetPath: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/newman'
+
+        artifactName: 'drop-newman-logs'
     - task: PublishTestResults@2
       displayName: Publish Postman Test Result
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/*.xml'
+        testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/newman/*.xml'
   # - deployment: VMDeploy
   #   displayName: NAME
   #   environment:
