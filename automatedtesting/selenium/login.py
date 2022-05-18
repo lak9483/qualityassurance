@@ -26,7 +26,7 @@ def login (driver, user, password):
     time.sleep(3)
     check_login  = driver.find_element(By.XPATH,'//div[@class="header_secondary_container"]/span').text
     assert "PRODUCTS" in check_login
-    print ('Successfully logged in!')
+    print ("Successfully logged in as "+ user)
 
 def add_items_to_cart(driver):
     i = 1
