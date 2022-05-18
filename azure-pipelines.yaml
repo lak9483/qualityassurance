@@ -77,66 +77,78 @@ stages:
 #               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
 - stage: Test
   jobs:
-  - job: jmeter
-    pool:
-      name: myAgentPool
-    steps:
-    - task: JMeterInstaller@0
-      inputs:
-        jmeterVersion: '5.2.1'
-    - task: Bash@3
-      displayName: EnduranceTest
-      inputs:
-        targetType: 'inline'
-        script: jmeter -n -t automatedtesting/jmeter/Endurance.jmx -l automatedtesting/jmeter/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport
+  # - job: jmeter
+  #   pool:
+  #     name: myAgentPool
+  #   steps:
+  #   - task: JMeterInstaller@0
+  #     inputs:
+  #       jmeterVersion: '5.2.1'
+  #   - task: Bash@3
+  #     displayName: EnduranceTest
+  #     inputs:
+  #       targetType: 'inline'
+  #       script: jmeter -n -t automatedtesting/jmeter/Endurance.jmx -l automatedtesting/jmeter/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport
 
-    - task: Bash@3
-      displayName: StressTest
-      inputs:
-        targetType: 'inline'
-        script: jmeter -n -t automatedtesting/jmeter/Stress.jmx  -l automatedtesting/jmeter/stressresults.jtl -e -o automatedtesting/jmeter/stressreport
+  #   - task: Bash@3
+  #     displayName: StressTest
+  #     inputs:
+  #       targetType: 'inline'
+  #       script: jmeter -n -t automatedtesting/jmeter/Stress.jmx  -l automatedtesting/jmeter/stressresults.jtl -e -o automatedtesting/jmeter/stressreport
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: 'automatedtesting/jmeter'
-        ArtifactName: 'jmeter'
-        publishLocation: 'Container'
+  #   - task: PublishBuildArtifacts@1
+  #     inputs:
+  #       PathtoPublish: 'automatedtesting/jmeter'
+  #       ArtifactName: 'jmeter'
+  #       publishLocation: 'Container'
   
-  - job: Postman
+  # - job: Postman
+  #   pool:
+  #     name: myAgentPool
+  #   steps:
+  #   - task: CmdLine@2
+  #     displayName: Install Newman
+  #     inputs:
+  #       script: 'sudo npm install -g newman'
+  #       workingDirectory: $(System.DefaultWorkingDirectory)
+  #   - task: CmdLine@2
+  #     displayName: Regression Tests
+  #     continueOnError: true
+  #     inputs:
+  #       script: 'newman run RegressionSuite.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export RegressionReport.xml'
+  #       workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+  #   - task: CmdLine@2
+  #     displayName: Data Validation Tests
+  #     continueOnError: true
+  #     inputs:
+  #       script: 'newman run DataValidation.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export DataValidationReport.xml'
+  #       workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+  #   - task: PublishPipelineArtifact@1
+
+  #     displayName: Publish Newman logs
+
+  #     inputs:
+
+  #       targetPath: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+
+  #       artifactName: 'drop-newman-logs'
+  #   - task: PublishTestResults@2
+  #     displayName: Publish Postman Test Result
+  #     inputs:
+  #       testResultsFormat: 'JUnit'
+  #       testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/*.xml'
+ 
+  - job: Selenium
     pool:
       name: myAgentPool
     steps:
-    - task: CmdLine@2
-      displayName: Install Newman
+    - task: Bash@3
+      displayName: Selenium
       inputs:
-        script: 'sudo npm install -g newman'
-        workingDirectory: $(System.DefaultWorkingDirectory)
-    - task: CmdLine@2
-      displayName: Regression Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run RegressionSuite.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export RegressionReport.xml'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-    - task: CmdLine@2
-      displayName: Data Validation Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run DataValidation.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export DataValidationReport.xml'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-    - task: PublishPipelineArtifact@1
-
-      displayName: Publish Newman logs
-
-      inputs:
-
-        targetPath: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-
-        artifactName: 'drop-newman-logs'
-    - task: PublishTestResults@2
-      displayName: Publish Postman Test Result
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/*.xml'
+              targetType: 'inline'
+              script: |
+                python3 login.py 
+                cat selenium.log
   # - deployment: VMDeploy
   #   displayName: NAME
   #   environment:
