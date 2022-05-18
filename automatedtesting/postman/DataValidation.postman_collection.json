@@ -12,8 +12,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Successful response\", function () {",
+							"pm.test(\"Response contains Created At\", function () {",
 							"    pm.expect(pm.response.text()).to.include(\"createdAt\");",
+							"});",
+							"pm.test(\"name validation\", function () {",
+							"    pm.expect(pm.response.json().name).to.eql(\"morpheus\");",
+							"});",
+							"pm.test(\"job validation\", function () {",
+							"    pm.expect(pm.response.json().job).to.eql(\"leader\");",
 							"});",
 							"var json = pm.response.json();",
 							"pm.environment.set(\"id\", json.id);"
@@ -45,8 +51,17 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Successful response\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"email\");",
+							"pm.test(\"Response contains page\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"page\");",
+							"});",
+							"pm.test(\"per_page validation\", function () {",
+							"    pm.expect(pm.response.json().per_page).to.eql(6);",
+							"});",
+							"pm.test(\"total validation\", function () {",
+							"    pm.expect(pm.response.json().total).to.eql(12);",
+							"});",
+							"pm.test(\"total pages validation\", function () {",
+							"    pm.expect(pm.response.json().total_pages).to.eql(2);",
 							"});",
 							""
 						],
