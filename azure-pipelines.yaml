@@ -127,7 +127,7 @@ stages:
       displayName: Publish Postman Test Result
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/JUnitReport*.xml'
+        testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/*.xml'
   # - deployment: VMDeploy
   #   displayName: NAME
   #   environment:
