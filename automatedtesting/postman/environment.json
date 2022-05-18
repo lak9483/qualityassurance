@@ -1,0 +1,33 @@
+{
+	"id": "dfd9c715-d973-471a-b026-9a1bae5bea94",
+	"name": "environment",
+	"values": [
+		{
+			"key": "name",
+			"value": "morpheus",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "job",
+			"value": "leader",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "new_job",
+			"value": "zion resident",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2022-05-18T16:12:48.171Z",
+	"_postman_exported_using": "Postman/9.18.2"
+}
