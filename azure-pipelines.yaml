@@ -93,7 +93,7 @@ stages:
       displayName: 'Publish Endurance Report'
       inputs:
         htmlType: 'Jmeter'
-        JmeterReportsPath: '$(Build.SourcesDirectory)/endurance-output' 
+        JmeterReportsPath: 'automatedtesting/jmeter/endurance-output' 
     
     - task: Bash@3
       displayName: StressTest
@@ -104,7 +104,7 @@ stages:
       displayName: 'Publish Stress Report'
       inputs:
         htmlType: 'Jmeter'
-        JmeterReportsPath: '$(Build.SourcesDirectory)/stress-output' 
+        JmeterReportsPath: 'automatedtesting/jmeter/stress-output' 
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: 'automatedtesting/jmeter'
