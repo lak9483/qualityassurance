@@ -23,41 +23,41 @@ stages:
       displayName: "Install Terraform"
       inputs:
         terraformVersion: '1.1.9'
-    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-      displayName: 'Terraform init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        backendServiceArm: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: '$(resourcegroupname)'
-        backendAzureRmStorageAccountName: '$(storageaccountname)'
-        backendAzureRmContainerName: '$(containername)'
-        backendAzureRmKey: 'terraform.state'
+    # - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+    #   displayName: 'Terraform init'
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     backendServiceArm: '$(azureServiceConnectionId)'
+    #     backendAzureRmResourceGroupName: '$(resourcegroupname)'
+    #     backendAzureRmStorageAccountName: '$(storageaccountname)'
+    #     backendAzureRmContainerName: '$(containername)'
+    #     backendAzureRmKey: 'terraform.state'
       
-    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-      displayName: 'Terraform sol plan'
-      inputs:
-        command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+    # - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+    #   displayName: 'Terraform sol plan'
+    #   inputs:
+    #     command: 'plan'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
-    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-      displayName: 'Terraform apply'
-      inputs:
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
-    - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-      displayName: 'Upload Package'
-      artifact: drop-fakerestapi
+    # - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+    #   displayName: 'Terraform apply'
+    #   inputs:
+    #     command: 'apply'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
+    # - task: ArchiveFiles@2
+    #   displayName: 'Archive FakeRestAPI'
+    #   inputs:
+    #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+    #     includeRootFolder: false
+    #     archiveType: 'zip'
+    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+    #   displayName: 'Upload Package'
+    #   artifact: drop-fakerestapi
 - stage:
   jobs:
   - deployment: FakeRestAPI
@@ -115,13 +115,13 @@ stages:
       displayName: Regression Tests
       continueOnError: true
       inputs:
-        script: 'newman run RegressionSuite.postman_collection.json -e environment.json --reporter-junitfull-export automatedtesting/postman/RegressionReport.xml'
+        script: 'newman run RegressionSuite.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export automatedtesting/postman/RegressionReport.xml'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     - task: CmdLine@2
       displayName: Data Validation Tests
       continueOnError: true
       inputs:
-        script: 'newman run DataValidation.postman_collection.json -e environment.json --reporter-junitfull-export automatedtesting/postman/DataValidationReport.xml'
+        script: 'newman run DataValidation.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export automatedtesting/postman/DataValidationReport.xml'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     - task: PublishTestResults@2
       displayName: Publish Postman Test Result
