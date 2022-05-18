@@ -101,6 +101,33 @@ stages:
         PathtoPublish: 'automatedtesting/jmeter'
         ArtifactName: 'jmeter'
         publishLocation: 'Container'
+  
+  - job: Postman
+    pool:
+      name: myAgentPool
+    steps:
+    - task: CmdLine@2
+      displayName: Install Newman
+      inputs:
+        script: 'sudo npm install -g newman'
+        workingDirectory: $(System.DefaultWorkingDirectory)
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run RegressionSuite.postman_collection.json'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run DataValidation.postman_collection.json'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+    - task: PublishTestResults@2
+      displayName: Publish Postman Test Result
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/JUnitReport*.xml'
   # - deployment: VMDeploy
   #   displayName: NAME
   #   environment:
