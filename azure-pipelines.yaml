@@ -75,6 +75,41 @@ stages:
               appName: $(webAppName)
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+- stage: Test
+  jobs:
+  - job: jmeter
+    pool:
+      name: myAgentPool
+    steps:
+    - task: JMeterInstaller@0
+      inputs:
+        jmeterVersion: '5.2.1'
+    - task: Bash@3
+      displayName: EnduranceTest
+      inputs:
+        targetType: 'inline'
+        script: 'jmeter -n -t automatedtesting/jmeter/Endurance.jmx -l automatedtesting/jmeter/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport'
+    - task: publishhtmlreport@1
+      displayName: 'Publish Endurance Report'
+      inputs:
+        htmlType: 'Jmeter'
+        JmeterReportsPath: '$(Build.SourcesDirectory)/endurance-output' 
+    
+    - task: Bash@3
+      displayName: StressTest
+      inputs:
+        targetType: 'inline'
+        script: 'jmeter -n -t automatedtesting/jmeter/Stress.jmx  -l automatedtesting/jmeter/stressresults.jtl -e -o automatedtesting/jmeter/stressreport'
+    - task: publishhtmlreport@1
+      displayName: 'Publish Stress Report'
+      inputs:
+        htmlType: 'Jmeter'
+        JmeterReportsPath: '$(Build.SourcesDirectory)/stress-output' 
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: 'automatedtesting/jmeter'
+        ArtifactName: 'jmeter'
+        publishLocation: 'Container'
   # - deployment: VMDeploy
   #   displayName: NAME
   #   environment:
