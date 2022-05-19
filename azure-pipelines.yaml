@@ -23,58 +23,58 @@ stages:
       displayName: "Install Terraform"
       inputs:
         terraformVersion: '1.1.9'
-#     - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-#       displayName: 'Terraform init'
-#       inputs:
-#         provider: 'azurerm'
-#         command: 'init'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-#         backendServiceArm: '$(azureServiceConnectionId)'
-#         backendAzureRmResourceGroupName: '$(resourcegroupname)'
-#         backendAzureRmStorageAccountName: '$(storageaccountname)'
-#         backendAzureRmContainerName: '$(containername)'
-#         backendAzureRmKey: 'terraform.state'
+    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+      displayName: 'Terraform init'
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        backendServiceArm: '$(azureServiceConnectionId)'
+        backendAzureRmResourceGroupName: '$(resourcegroupname)'
+        backendAzureRmStorageAccountName: '$(storageaccountname)'
+        backendAzureRmContainerName: '$(containername)'
+        backendAzureRmKey: 'terraform.state'
       
-#     - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-#       displayName: 'Terraform sol plan'
-#       inputs:
-#         command: 'plan'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-#         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+      displayName: 'Terraform sol plan'
+      inputs:
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
-#     - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-#       displayName: 'Terraform apply'
-#       inputs:
-#         command: 'apply'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-#         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
-#     - task: ArchiveFiles@2
-#       displayName: 'Archive FakeRestAPI'
-#       inputs:
-#         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-#         includeRootFolder: false
-#         archiveType: 'zip'
-#         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-#     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-#       displayName: 'Upload Package'
-#       artifact: drop-fakerestapi
-# - stage:
-#   jobs:
-#   - deployment: FakeRestAPI
-#     pool:
-#       name: myAgentPool
-#     environment: 'TEST'
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - task: AzureWebApp@1
-#             displayName: 'Deploy Azure Web App'
-#             inputs:
-#               azureSubscription: $(azureServiceConnectionId)
-#               appName: $(webAppName)
-#               appType: webApp
-#               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+      displayName: 'Terraform apply'
+      inputs:
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
+    - task: ArchiveFiles@2
+      displayName: 'Archive FakeRestAPI'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+      displayName: 'Upload Package'
+      artifact: drop-fakerestapi
+- stage:
+  jobs:
+  - deployment: FakeRestAPI
+    pool:
+      name: myAgentPool
+    environment: 'TEST'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appName: $(webAppName)
+              appType: webApp
+              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
 - stage: Test
   jobs:
   - job: jmeter
@@ -168,11 +168,7 @@ stages:
         PathtoPublish: 'automatedtesting/selenium'
         ArtifactName: 'selenium'
         publishLocation: 'Container'
-  
-    - task: PublishPipelineArtifact@1
-      displayName: Publish selenium logs
-      inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium/'
+
 
   # - deployment: VMDeploy
   #   displayName: NAME
