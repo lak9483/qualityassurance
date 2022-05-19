@@ -23,125 +23,125 @@ stages:
       displayName: "Install Terraform"
       inputs:
         terraformVersion: '1.1.9'
-    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-      displayName: 'Terraform init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        backendServiceArm: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: '$(resourcegroupname)'
-        backendAzureRmStorageAccountName: '$(storageaccountname)'
-        backendAzureRmContainerName: '$(containername)'
-        backendAzureRmKey: 'terraform.state'
+#     - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+#       displayName: 'Terraform init'
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'init'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+#         backendServiceArm: '$(azureServiceConnectionId)'
+#         backendAzureRmResourceGroupName: '$(resourcegroupname)'
+#         backendAzureRmStorageAccountName: '$(storageaccountname)'
+#         backendAzureRmContainerName: '$(containername)'
+#         backendAzureRmKey: 'terraform.state'
       
-    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-      displayName: 'Terraform sol plan'
-      inputs:
-        command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+#     - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+#       displayName: 'Terraform sol plan'
+#       inputs:
+#         command: 'plan'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+#         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
-    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-      displayName: 'Terraform apply'
-      inputs:
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
-    - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-      displayName: 'Upload Package'
-      artifact: drop-fakerestapi
-- stage:
-  jobs:
-  - deployment: FakeRestAPI
-    pool:
-      name: myAgentPool
-    environment: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appName: $(webAppName)
-              appType: webApp
-              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-- stage: Test
-  jobs:
-  - job: jmeter
-    pool:
-      name: myAgentPool
-    steps:
-    - task: JMeterInstaller@0
-      inputs:
-        jmeterVersion: '5.2.1'
-    - task: Bash@3
-      displayName: EnduranceTest
-      inputs:
-        targetType: 'inline'
-        script: jmeter -n -t automatedtesting/jmeter/Endurance.jmx -l automatedtesting/jmeter/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport
+#     - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+#       displayName: 'Terraform apply'
+#       inputs:
+#         command: 'apply'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+#         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
+#     - task: ArchiveFiles@2
+#       displayName: 'Archive FakeRestAPI'
+#       inputs:
+#         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+#         includeRootFolder: false
+#         archiveType: 'zip'
+#         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+#     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+#       displayName: 'Upload Package'
+#       artifact: drop-fakerestapi
+# - stage:
+#   jobs:
+#   - deployment: FakeRestAPI
+#     pool:
+#       name: myAgentPool
+#     environment: 'TEST'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: AzureWebApp@1
+#             displayName: 'Deploy Azure Web App'
+#             inputs:
+#               azureSubscription: $(azureServiceConnectionId)
+#               appName: $(webAppName)
+#               appType: webApp
+#               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+# - stage: Test
+#   jobs:
+#   - job: jmeter
+#     pool:
+#       name: myAgentPool
+#     steps:
+#     - task: JMeterInstaller@0
+#       inputs:
+#         jmeterVersion: '5.2.1'
+#     - task: Bash@3
+#       displayName: EnduranceTest
+#       inputs:
+#         targetType: 'inline'
+#         script: jmeter -n -t automatedtesting/jmeter/Endurance.jmx -l automatedtesting/jmeter/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport
 
-    - task: Bash@3
-      displayName: StressTest
-      inputs:
-        targetType: 'inline'
-        script: jmeter -n -t automatedtesting/jmeter/Stress.jmx  -l automatedtesting/jmeter/stressresults.jtl -e -o automatedtesting/jmeter/stressreport
+#     - task: Bash@3
+#       displayName: StressTest
+#       inputs:
+#         targetType: 'inline'
+#         script: jmeter -n -t automatedtesting/jmeter/Stress.jmx  -l automatedtesting/jmeter/stressresults.jtl -e -o automatedtesting/jmeter/stressreport
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: 'automatedtesting/jmeter'
-        ArtifactName: 'jmeter'
-        publishLocation: 'Container'
+#     - task: PublishBuildArtifacts@1
+#       inputs:
+#         PathtoPublish: 'automatedtesting/jmeter'
+#         ArtifactName: 'jmeter'
+#         publishLocation: 'Container'
   
-  - job: Postman
-    pool:
-      name: myAgentPool
-    steps:
-    - task: CmdLine@2
-      displayName: Install Newman
-      inputs:
-        script: 'sudo npm install -g newman'
-        workingDirectory: $(System.DefaultWorkingDirectory)
-    - task: CmdLine@2
-      displayName: Regression Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run RegressionSuite.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export RegressionReport.xml'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-    - task: CmdLine@2
-      displayName: Data Validation Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run DataValidation.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export DataValidationReport.xml'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-    - task: PublishPipelineArtifact@1
+#   - job: Postman
+#     pool:
+#       name: myAgentPool
+#     steps:
+#     - task: CmdLine@2
+#       displayName: Install Newman
+#       inputs:
+#         script: 'sudo npm install -g newman'
+#         workingDirectory: $(System.DefaultWorkingDirectory)
+#     - task: CmdLine@2
+#       displayName: Regression Tests
+#       continueOnError: true
+#       inputs:
+#         script: 'newman run RegressionSuite.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export RegressionReport.xml'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+#     - task: CmdLine@2
+#       displayName: Data Validation Tests
+#       continueOnError: true
+#       inputs:
+#         script: 'newman run DataValidation.postman_collection.json -e environment.json -r cli,junitfull --reporter-junitfull-export DataValidationReport.xml'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+#     - task: PublishPipelineArtifact@1
 
-      displayName: Publish Newman logs
+#       displayName: Publish Newman logs
 
-      inputs:
+#       inputs:
 
-        targetPath: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+#         targetPath: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
 
-        artifactName: 'drop-newman-logs'
-    - task: PublishTestResults@2
-      displayName: Publish Postman Test Result
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/*.xml'
+#         artifactName: 'drop-newman-logs'
+#     - task: PublishTestResults@2
+#       displayName: Publish Postman Test Result
+#       inputs:
+#         testResultsFormat: 'JUnit'
+#         testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/*.xml'
  
-  - job: Selenium
-    pool:
-      name: myAgentPool
-    steps:
+#   - job: Selenium
+#     pool:
+#       name: myAgentPool
+#     steps:
     - task: Bash@3
       displayName: Selenium
       inputs:
