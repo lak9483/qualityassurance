@@ -147,11 +147,6 @@ stages:
       inputs:
               targetType: 'inline'
               script: |
-                sudo apt-get upgrade -y
-                sudo apt-get install python3-pip -y
-                sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
-                pip3 install selenium
                 wget https://chromedriver.storage.googleapis.com/101.0.4951.15/chromedriver_linux64.zip
                 unzip chromedriver_linux64.zip
                 sudo mv chromedriver /usr/bin/chromedriver
