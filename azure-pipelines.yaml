@@ -156,7 +156,7 @@ stages:
                 unzip chromedriver_linux64.zip
                 sudo mv chromedriver /usr/bin/chromedriver
                 sudo chown root:root /usr/bin/chromedriver
-                sudo mkdir /logs
+                sudo chmod +x /usr/bin/chromedriver
                 python3 automatedtesting/selenium/login.py > logs.log
                 cat logs.log
                 sudo mv logs.log /logs
