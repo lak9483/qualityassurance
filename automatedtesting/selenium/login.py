@@ -8,6 +8,7 @@ def setup():
     print ('Starting the browser...')
     options = ChromeOptions()
     options.add_argument("--headless") 
+    options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(options=options)
     print ('Browser started successfully. Navigating to the demo page to login.')
     driver.get('https://www.saucedemo.com/')
