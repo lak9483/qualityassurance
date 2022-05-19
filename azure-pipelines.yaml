@@ -162,7 +162,13 @@ stages:
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(System.DefaultWorkingDirectory)/selenium-$(Build.BuildId).zip'
-        
+    
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: 'automatedtesting/selenium'
+        ArtifactName: 'selenium'
+        publishLocation: 'Container'
+  
     - task: PublishPipelineArtifact@1
       displayName: Publish selenium logs
       inputs:
