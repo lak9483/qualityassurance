@@ -7,7 +7,7 @@ tenant_id = "e144fde1-a635-4313-b275-ef85cccb6c45"
 # Resource Group/Location
 location = "South Central US"
 resource_group = "Azuredevops"
-application_type = "Ad"
+application_type = "Ad1"
 
 # Network
 virtual_network_name = "Azuredevops-Vnet"
