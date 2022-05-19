@@ -4,15 +4,19 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 import time
 
+def timestamp():
+    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return (ts + '\t')
+
 def setup():
-    print ('Starting the browser...')
+    print (timestamp() + 'Starting the browser...')
     options = ChromeOptions()
     options.add_argument("--headless") 
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-extensions")
     options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(options=options)
-    print ('Browser started successfully. Navigating to the demo page to login.')
+    print (timestamp() +'Browser started successfully. Navigating to the demo page to login.')
     driver.get('https://www.saucedemo.com/')
     return driver
 # Start the browser and login with standard_user
@@ -29,14 +33,14 @@ def login (driver, user, password):
     time.sleep(3)
     check_login  = driver.find_element(By.XPATH,'//div[@class="header_secondary_container"]/span').text
     assert "PRODUCTS" in check_login
-    print ("Successfully logged in as "+ user)
+    print (timestamp() +"Successfully logged in as "+ user)
 
 def add_items_to_cart(driver):
     i = 1
     for element in driver.find_elements(By.XPATH,"//button[text()='Add to cart']"):
         element.click()
         item_name = driver.find_element(By.XPATH,"(//div[@class='inventory_item_name'])["+str(i)+"]").text
-        print(item_name + " Added to cart")
+        print(timestamp() + item_name + " Added to cart")
         i = i + 1
     number_of_items_in_cart = driver.find_element(By.XPATH,"//span[@class='shopping_cart_badge']").text
     assert "6" in number_of_items_in_cart
@@ -47,12 +51,11 @@ def remove_items_from_cart(driver):
     for element in driver.find_elements(By.XPATH,"//button[text()='Remove']"):
         element.click()
         item_name = driver.find_element(By.XPATH,"(//div[@class='inventory_item_name'])["+str(i)+"]").text
-        print(item_name + "Removed from cart")
+        print(timestamp() +item_name + "Removed from cart")
         i = i + 1
     number_of_items_in_cart = driver.find_elements(By.XPATH,"//span[@class='shopping_cart_badge']")
-    print (len(number_of_items_in_cart))
     assert len(number_of_items_in_cart)==0
-    print('All items are successfully removed from cart')
+    print(timestamp() +'All items are successfully removed from cart')
 
 driver = setup()
 login(driver,'standard_user', 'secret_sauce')
