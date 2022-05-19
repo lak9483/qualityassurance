@@ -9,6 +9,7 @@ def setup():
     options = ChromeOptions()
     options.add_argument("--headless") 
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--remote-debugging-port=9222')
     driver = webdriver.Chrome(options=options)
     print ('Browser started successfully. Navigating to the demo page to login.')
     driver.get('https://www.saucedemo.com/')
