@@ -138,10 +138,10 @@ stages:
 #         testResultsFormat: 'JUnit'
 #         testResultsFiles: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/*.xml'
  
-#   - job: Selenium
-#     pool:
-#       name: myAgentPool
-#     steps:
+  - job: Selenium
+    pool:
+      name: myAgentPool
+    steps:
     - task: Bash@3
       displayName: Selenium
       inputs:
