@@ -11,7 +11,7 @@ def setup():
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--remote-debugging-port=9222")
     options.addArguments("--no-sandbox")
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(options=options,executable_path='/home/devopsagent/myagent/_work/1/s/automatedtesting/selenium/chromedriver.exe')
     print ('Browser started successfully. Navigating to the demo page to login.')
     driver.get('https://www.saucedemo.com/')
     return driver
