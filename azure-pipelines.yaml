@@ -42,12 +42,12 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
-    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-      displayName: 'Terraform apply'
-      inputs:
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
+    # - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+    #   displayName: 'Terraform apply'
+    #   inputs:
+    #     command: 'apply'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'  
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
