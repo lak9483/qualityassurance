@@ -35,12 +35,12 @@ stages:
         backendAzureRmContainerName: '$(containername)'
         backendAzureRmKey: 'terraform.state'
       
-    - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
-      displayName: 'Terraform sol plan'
-      inputs:
-        command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+    # - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
+    #   displayName: 'Terraform sol plan'
+    #   inputs:
+    #     command: 'plan'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environment/test'
+    #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
     # - task: 'ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2'
     #   displayName: 'Terraform apply'
