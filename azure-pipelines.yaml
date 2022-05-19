@@ -154,13 +154,12 @@ stages:
                 sudo chmod +x /usr/bin/chromedriver
                 python3 automatedtesting/selenium/login.py > logs.log
                 cat logs.log
-                sudo mv logs.log /logs
+                sudo mv logs.log $(System.DefaultWorkingDirectory)/automatedtesting/selenium
     
     - task: PublishPipelineArtifact@1
       displayName: Publish selenium logs
       inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)/logs/logs.log'
-              artifactName: 'drop-selenium-logs'
+              targetPath: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium/'
 
   # - deployment: VMDeploy
   #   displayName: NAME
